@@ -6,6 +6,7 @@
 //
 import UIKit
 import AVFoundation
+import MediaPlayer
 
 final class PlayMediaViewController: UIViewController {
     
@@ -23,7 +24,6 @@ final class PlayMediaViewController: UIViewController {
         playButton.layer.cornerRadius = playButton.frame.width/2
         setupDataUIMusic()
         playSongMusic()
-        
     }
     
     private func setupDataUIMusic() {
@@ -50,8 +50,51 @@ final class PlayMediaViewController: UIViewController {
             Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
                 self.updateSlider()
             }
-        } catch let error {
+            
+            //into music in lokscreen
+            guard let image = UIImage(named: ListMusic.listSong[index ?? 0].imageMusic!) else {
+                        return
+                    }
+            let artWork = MPMediaItemArtwork(boundsSize: image.size, requestHandler: {
+                (size) -> UIImage in return image
+            })
+            
+            MPNowPlayingInfoCenter.default().nowPlayingInfo = [
+                MPMediaItemPropertyTitle: ListMusic.listSong[index ?? 0].name ?? 0,
+                MPMediaItemPropertyArtist: ListMusic.listSong[index ?? 0].author ?? 0,
+                MPMediaItemPropertyPlaybackDuration: player.duration,
+                MPMediaItemPropertyArtwork: artWork
+            ]
+            
+            UIApplication.shared.beginReceivingRemoteControlEvents()
+            becomeFirstResponder()
+        } catch _ {
             print("something went wrong")
+        }
+    }
+    
+    //music playback control function
+    override func remoteControlReceived(with event: UIEvent?) {
+        if let event = event {
+            if event.type == .remoteControl {
+                switch event.subtype {
+                case.remoteControlPlay:
+                    player?.play()
+                case.remoteControlStop:
+                    player?.stop()
+                case.remoteControlPause:
+                    player?.pause()
+                case.remoteControlNextTrack:
+                    index = ((index ?? 0) + 1 + 3) % 3
+                    setupDataUIMusic()
+                    playSongMusic()
+                case.remoteControlPreviousTrack:
+                    index = ((index ?? 0) - 1 + 3) % 3
+                    setupDataUIMusic()
+                    playSongMusic()
+                default: break
+                }
+            }
         }
     }
     
@@ -70,6 +113,10 @@ final class PlayMediaViewController: UIViewController {
         setupDataUIMusic()
         playSongMusic()
     }
+    
+    func setDataPage(index: Int) {
+     self.index = index
+ }
     
     @IBAction private func playButton(_ sender: UIButton) {
         if let player = player {

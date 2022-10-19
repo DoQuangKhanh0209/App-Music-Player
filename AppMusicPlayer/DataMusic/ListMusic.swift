@@ -9,8 +9,8 @@ import Foundation
 
 class ListMusic {
     static let listSong: [MusicModel] = [
-        MusicModel(name: "Da Lo Yeu Em Nhieu", author: "Justatee", imageMusic: "audio-Image", fileMusic: "song1"),
-        MusicModel(name: "Waiting For You", author: "Mono", imageMusic: "audio2-Image", fileMusic: "song2"),
-        MusicModel(name: "Good Morning", author: "Jack5t", imageMusic: "audio3-Image", fileMusic: "song3"),
+        MusicModel(name: "Waiting For You", author: "Mono", imageMusic: "mono", fileMusic: "song1"),
+        MusicModel(name: "Da Lo Yeu Em Nhieu", author: "Justatee", imageMusic: "audio-Image", fileMusic: "song2"),
+        MusicModel(name: "Chuyen doi ta", author: "Da lab", imageMusic: "chuyendoita", fileMusic: "song3"),
     ]
 }
